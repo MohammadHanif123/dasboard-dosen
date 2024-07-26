@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            height: 100vh;
+            display: flex;
+        }
+
+        .container {
+            display: flex;
+            width: 100%;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #f0f0f0;
+            padding: 20px;
+            height: 100vh; /* Full height */
+            box-sizing: border-box;
+        }
+
+        .profile {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .profile .icon {
+            width: 30px;
+            height: 30px;
+            background-color: #ccc;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .menu .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+            cursor: pointer;
+        }
+
+        .menu .menu-item .icon {
+            width: 20px;
+            height: 20px;
+            background-color: #ccc;
+            margin-right: 10px;
+        }
+
+        .sub-menu {
+            padding-left: 20px;
+            display: none;
+        }
+
+        .sub-menu .sub-menu-item {
+            display: flex;
+            align-items: center;
+            padding: 5px 0;
+            cursor: pointer;
+        }
+
+        .sub-menu .sub-menu-item .icon {
+            width: 15px;
+            height: 15px;
+            background-color: #ccc;
+            margin-right: 10px;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            padding: 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .header select,
+        .header .logout-btn {
+            padding: 10px;
+            margin-right: 10px;
+        }
+
+        .content {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            flex-grow: 1;
+        }
+
+        .box {
+            background-color: #e0e0e0;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .rekap-nilai {
+            display: none;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .rekap-nilai.active {
+            display: flex;
+        }
+
+        .rekap-nilai-header {
+            margin-bottom: 20px;
+        }
+
+        .rekap-nilai-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            flex-grow: 1;
+        }
+
+        .rekap-box {
+            background-color: #e0e0e0;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .presensi-table {
+            display: none;
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .presensi-table.active {
+            display: table;
+        }
+
+        .presensi-table th, .presensi-table td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+        }
+
+        .presensi-table th {
+            background-color: #f0f0f0;
+        }
+
+        .tambah-data {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            flex-grow: 1;
+        }
+
+        .tambah-data.active {
+            display: flex;
+        }
+
+        .form-group {
+            margin-bottom: 10px;
+            width: 100%;
+        }
+
+        .form-group input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin: 0 10px;
+        }
+
+        .save-btn {
+            padding: 10px 20px;
+            background-color: #ccc;
+            border: none;
+            cursor: pointer;
+        }
+
+        .prodi {
+            display: flex;
+        }
+
+        .prodi.hidden {
+            display: none;
+        }
+    </style>
+    <script>
+        function showSection(section) {
+            const contentSections = document.querySelectorAll('.main-content > div');
+            contentSections.forEach(sec => sec.classList.remove('active'));
+
+            const targetSection = document.querySelector(`.${section}`);
+            targetSection.classList.add('active');
+
+            if (section === 'tambah-data') {
+                document.querySelectorAll('.prodi').forEach(el => el.classList.add('hidden'));
+            } else {
+                document.querySelectorAll('.prodi').forEach(el => el.classList.remove('hidden'));
+            }
+        }
+
+        function toggleSubMenu() {
+            const subMenu = document.querySelector('.sub-menu');
+            subMenu.style.display = subMenu.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function showPresensiTable() {
+            const presensiTable = document.querySelector('.presensi-table');
+            presensiTable.classList.add('active');
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <div class="profile">
+                <i class="icon user-icon"></i>
+                <span>DOSEN</span>
+            </div>
+            <div class="menu">
+                <div class="menu-item" onclick="showSection('dashboard')">
+                    <i class="icon home-icon"></i>
+                    <span>Beranda</span>
+                </div>
+                <div class="menu-item" onclick="toggleSubMenu()">
+                    <i class="icon recap-icon"></i>
+                    <span>Rekapitulasi Nilai</span>
+                </div>
+                <div class="sub-menu">
+                    <div class="sub-menu-item" onclick="showPresensiTable()">
+                        <i class="icon sub-icon"></i>
+                        <span>Presensi</span>
+                    </div>
+                    <div class="sub-menu-item">
+                        <i class="icon sub-icon"></i>
+                        <span>Tugas</span>
+                    </div>
+                    <div class="sub-menu-item">
+                        <i class="icon sub-icon"></i>
+                        <span>Responsi</span>
+                    </div>
+                    <div class="sub-menu-item">
+                        <i class="icon sub-icon"></i>
+                        <span>UTS</span>
+                    </div>
+                    <div class="sub-menu-item">
+                        <i class="icon sub-icon"></i>
+                        <span>UAS</span>
+                    </div>
+                </div>
+                <div class="menu-item" onclick="showSection('tambah-data')">
+                    <i class="icon add-icon"></i>
+                    <span>Tambah Data</span>
+                </div>
+                <div class="menu-item">
+                    <i class="icon guidance-icon"></i>
+                    <span>Bimbingan</span>
+                </div>
+            </div>
+        </div>
+        <div class="main-content">
+            <div class="header">
+                <select>
+                    <option>Tahun Ajaran</option>
+                </select>
+                <select>
+                    <option>Ganjil/Genap</option>
+                </select>
+                <button class="logout-btn">LOGOUT</button>
+            </div>
+            <div class="dashboard content active">
+                <div class="box prodi">prodi</div>
+                <div class="box prodi">prodi</div>
+                <div class="box prodi">prodi</div>
+                <div class="box prodi">prodi</div>
+                <div class="box prodi">prodi</div>
+                <div class="box prodi">prodi</div>
+            </div>
+            <div class="rekap-nilai">
+                <div class="rekap-nilai-header">
+                    <h2>Rekapitulasi Nilai</h2>
+                </div>
+                <div class="rekap-nilai-content">
+                    <div class="rekap-box">Mata Kuliah 1</div>
+                    <div class="rekap-box">Mata Kuliah 2</div>
+                    <div class="rekap-box">Mata Kuliah 3</div>
+                    <div class="rekap-box">Mata Kuliah 4</div>
+                    <div class="rekap-box">Mata Kuliah 5</div>
+                    <div class="rekap-box">Mata Kuliah 6</div>
+                </div>
+            </div>
+            <table class="presensi-table">
+                <thead>
+                    <tr>
+                        <th>NO</th>
+                        <th>NAMA</th>
+                        <th>NIM</th>
+                        <th>HARI/TGL</th>
+                        <th>HADIR/TIDAK</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>John Doe</td>
+                        <td>123456789</td>
+                        <td>01/01/2023</td>
+                        <td>Hadir</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Jane Smith</td>
+                        <td>987654321</td>
+                        <td>01/01/2023</td>
+                        <td>Tidak Hadir</td>
+                    </tr>
+                <tbody>
+                    <!-- Add table rows here -->
+                </tbody>
+            </table>
+            <div class="tambah-data">
+                <h2>TAMBAHAN DATA</h2>
+                <div class="form-group">
+                    <input type="text" placeholder="NAMA">
+                </div>
+                <div class="form-group">
+                    <input type="text" placeholder="NIM">
+                </div>
+                <div class="form-group">
+                    <input type="text" placeholder="PRODI">
+                </div>
+                <button class="save-btn">SAVE</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
